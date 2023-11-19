@@ -6,37 +6,41 @@
 
 #define MAX_COMMAND_SIZE 100
 
-int main(void) {
-	    char command[MAX_COMMAND_SIZE];
+int main(void)
+{
+	char command[MAX_COMMAND_SIZE];
 
-	        while (1) {
-			        printf("simple_shell$ ");
-				        if (fgets(command, sizeof(command), stdin) == NULL) {
-						            
-						            printf("\n");
-							                break;
-									        }
+	while (1)
+       	{
+		printf("simple_shell$ ");
+		if (fgets(command, sizeof(command), stdin) == NULL)
+	       	{
 
-					        
-					       command[strlen(command) - 1] = '\0';
+			printf("\n");
+			break;
+		}
 
-					               pid_t pid = fork();
+		command[strlen(command) - 1] = '\0';
 
-						               if (pid == -1) {
-								                   perror("fork");
-										               exit(EXIT_FAILURE);
-											               } else if (pid == 0) {
-													              
-													                   execlp(command, command, (char *)NULL);
-															               
-															               perror("exec");
-																                   exit(EXIT_FAILURE);
-																		           } else {
-																				               
-																				               int status;
-																					                   waitpid(pid, &status, 0);
-																							           }
-							           }
+		pid_t pid = fork();
 
-		    return 0;
+		if (pid == -1)
+	       	{
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+	       	else if (pid == 0)
+	       	{
+			execlp(command, command, (char *)NULL);
+			perror("exec");
+			exit(EXIT_FAILURE);
+		}
+	       	else
+	       	{
+			int status;
+			waitpid(pid, &status, 0);
+		}
+	}
+
+	return 0;
 }
